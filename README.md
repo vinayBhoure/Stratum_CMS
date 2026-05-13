@@ -1,12 +1,12 @@
 <div align="center">
 
-# ⚡ Portfolio CMS
+# ⚡ Stratum_CMS
 
 ### Manage and showcase your work — not just another CMS.
 
 A developer-centric content management system enabling professionals to manage, publish, and showcase their technical work without touching source code. 
 
-![React](https://img.shields.io/badge/React-TypeScript-blue?logo=react)
+![React](https://img.shields.io/badge/React-JavaScript-blue?logo=react)
 ![Node.js](https://img.shields.io/badge/Node.js-Express%2FFastify-green?logo=node.js)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational-336791?logo=postgresql&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)
@@ -18,9 +18,9 @@ A developer-centric content management system enabling professionals to manage, 
 
 ---
 
-## 🎯 What is Portfolio CMS?
+## 🎯 What is Stratum_CMS?
 
-Portfolio CMS is positioned as a purpose-built alternative to generic CMS tools like WordPress or Contentful. It deeply understands the developer's context — GitHub repositories, tech stacks, project categories, and blog writing — and intelligently surfaces that content to the public.
+Stratum_CMS is positioned as a purpose-built alternative to generic CMS tools like WordPress or Contentful. It deeply understands the developer's context — GitHub repositories, tech stacks, project categories, and blog writing — and intelligently surfaces that content to the public.
 
 **Perfect for:**
 - 👨‍💻 **Software Engineers** — sync your GitHub projects automatically.
@@ -76,7 +76,7 @@ Multiple pre-built portfolio themes with seamless switching without data loss. P
 <tr>
 <td>
 
-- React + TypeScript
+- React + JavaScript
 - Vite Bundler
 - Strict Mode Enabled
 
@@ -150,4 +150,4 @@ erDiagram
         int project_id
         int tag_id
     }
-
+```
