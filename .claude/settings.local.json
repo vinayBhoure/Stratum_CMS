@@ -9,7 +9,8 @@
       "PowerShell($env:PGPASSWORD = \"password123\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\17\\\\bin\\\\psql.exe\" -h localhost -U vinay -d mydb -c \"SELECT 1;\" 2>&1)",
       "PowerShell($env:PGPASSWORD = \"password123\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\17\\\\bin\\\\psql.exe\" -h localhost -U vinay -d mydb -c \"SELECT 1 AS connection_test;\")",
       "Bash(pkill -f \"node server.js\")",
-      "Bash(pkill -f \"vite\")"
+      "Bash(pkill -f \"vite\")",
+      "Bash(git push *)"
     ]
   }
 }
