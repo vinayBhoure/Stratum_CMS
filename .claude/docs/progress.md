@@ -2,15 +2,16 @@
 
 ## Current State
 ```yaml
-current_phase: "Phase 0"
+current_phase: "Phase 1"
 started_at: "2026-04-29"
-last_updated: "2026-05-13"
+last_updated: "2026-05-14"
 ```
 
 ---
 
 ## Phase 0 — Foundation & Setup
-**Status**: In Progress
+**Status**: Complete ✅
+**Completed**: 2026-05-14
 **Goal**: Project scaffolding, tooling, documentation, and local dev environment
 
 ### Documentation ✅
@@ -26,27 +27,28 @@ last_updated: "2026-05-13"
 - [x] Database rules (`.claude/rules/database-rules.md`)
 - [x] Git rules (`.claude/rules/git-rules.md`)
 
-### Project Scaffolding 🔄
+### Project Scaffolding ✅
 - [x] Frontend initialized (Vite + React)
 - [x] Backend initialized (Express + Node.js)
-- [ ] Prisma schema defined (`server/prisma/schema.prisma`)
+- [x] Prisma schema defined (`server/prisma/schema.prisma`) — 10 models
 - [x] Environment variables configured (`.env` files)
 - [x] ESLint + Prettier configured
 - [x] Path aliases configured (`jsconfig.json`, `vite.config.js`)
 
-### Infrastructure 🔄
-- [ ] PostgreSQL database running locally
-- [ ] Prisma connected to database
-- [ ] Initial migration applied
+### Infrastructure ✅
+- [x] PostgreSQL database connected (Neon DB — serverless cloud PostgreSQL)
+- [x] Prisma connected to database
+- [x] Initial migration applied (`20260514152445_init`)
+- [x] Prisma client generated (`server/generated/prisma/`)
 - [x] Health check endpoint returns 200 (`GET /health`)
-- [ ] Frontend dev server runs without errors
-- [ ] Backend dev server runs without errors
+- [x] Frontend dev server runs without errors (Vite on port 5173)
+- [x] Backend dev server runs without errors (Express on port 5000)
 
-### Verification Criteria
-- [ ] `cd client && npm run dev` → starts without errors
-- [ ] `cd server && npm run dev` → starts without errors
-- [ ] `curl http://localhost:3000/health` → returns `{ "status": "ok" }`
-- [ ] `npx prisma studio` → opens and shows tables
+### Verification Criteria ✅
+- [x] `cd client && npm run dev` → starts without errors
+- [x] `cd server && npm run dev` → starts without errors
+- [x] `GET http://localhost:5000/health` → returns `{ "success": true, "data": { "status": "ok" } }`
+- [x] `npx prisma studio` → can open and show all 10 tables
 
 ---
 

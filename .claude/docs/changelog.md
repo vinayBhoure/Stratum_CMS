@@ -6,6 +6,25 @@ Categories: Added, Fixed, Changed, Technical.
 
 ---
 
+## [2026-05-14] - Phase 0 Complete
+
+### Added
+- Prisma schema with 10 models: `User`, `Project`, `Skill`, `Experience`, `Contact`, `SocialAccount`, `Resume`, `Tag`, `ProjectTag`, `ProjectSkill`, `ExperienceSkill`
+- Initial database migration applied (`20260514152445_init`) via Neon DB (serverless PostgreSQL)
+- Prisma client generated to `server/generated/prisma/`
+- Full project committed to git — `.claude/`, `docs/`, `client/`, `server/` all tracked
+- Error registry and first error documented: ERR-001 (Prisma P1000 Docker pg_hba.conf auth mismatch)
+
+### Fixed
+- `.gitignore` was incorrectly excluding `.claude/` and `Docs/` — replaced with correct ignore rules
+
+### Technical
+- Switched database from local Docker PostgreSQL to Neon DB cloud PostgreSQL
+- `DATABASE_URL` uses direct (non-pooled) Neon endpoint with `sslmode=require`
+- Both dev servers verified: backend on port 5000, frontend on port 5173
+
+---
+
 ## [2026-04-29] - Phase 0
 
 ### Added

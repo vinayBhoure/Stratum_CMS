@@ -15,7 +15,7 @@ Central registry of documented errors encountered during development.
 
 | # | Error Code | Layer | Summary | Status | Doc Link |
 |---|-----------|-------|---------|--------|----------|
-| — | *No errors documented yet* | — | — | — | — |
+| 1 | P1000 | Database / Docker | Prisma auth fails against Docker PostgreSQL — `md5` vs `scram-sha-256` mismatch + IPv6 not in `pg_hba.conf` | Resolved | [ERR-001](ERR-001-prisma-p1000-docker-postgres-auth.md) |
 
 ---
 
