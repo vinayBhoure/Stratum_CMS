@@ -3,7 +3,7 @@
 // Fields use camelCase; columns use snake_case via @map()
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
