@@ -6,6 +6,30 @@ Categories: Added, Fixed, Changed, Technical.
 
 ---
 
+## [2026-05-18] - Phase 1 Complete
+
+### Added
+- **API Infrastructure**: Prisma client singleton (`lib/prisma.js`), `asyncHandler` wrapper, Zod validation middleware, Clerk sync-on-request auth middleware (`middlewares/require-auth.js`), `/api/v1` base router
+- **User + Clerk integration**: `GET /api/v1/me` — user row auto-created on first authenticated request from Clerk session claims
+- **Skills CRUD**: `POST/GET/PUT/DELETE /api/v1/skills` — scoped to authenticated user, name validated (max 100 chars)
+- **Projects CRUD**: `POST/GET/PUT/DELETE /api/v1/projects` — inline `tags[]` (find-or-create `Tag`/`ProjectTag`) and `skillIds[]` (`ProjectSkill`) replaced atomically on update
+- **Experience CRUD**: `POST/GET/PUT/DELETE /api/v1/experience` — optional `skillIds[]` linking, `endDate` must be after `startDate`
+- **Contact + Social Accounts**: `POST/GET/DELETE /api/v1/contact` (single record per user, upsert); `POST/GET/PUT/DELETE /api/v1/social-accounts`
+- **Resume upload**: `POST /api/v1/upload` (generic Cloudinary upload); `POST/GET/DELETE /api/v1/resume` — single resume per user, replaces on re-upload
+- **Public API**: Unauthenticated `GET /api/v1/:username/{projects,experience,skills,contact,resume}` — 404 for unknown username, `[]` for empty resources
+- `multer` dependency for multipart file upload handling
+
+### Fixed
+- Switched Prisma schema generator from `prisma-client` (Prisma 6 TypeScript-native, outputs `.ts` only) to `prisma-client-js` (outputs `index.js`, required by CommonJS `require()`)
+
+### Technical
+- Upload middleware: memory storage, MIME allowlist (JPG/PNG/WebP/PDF), 5 MB size cap
+- Public `:username` router mounted last in `routes/index.js` to prevent shadowing fixed-path routes
+- `updateMany`/`deleteMany` pattern used for ownership-scoped mutations (avoids separate auth check)
+- Zod validation applied to all mutating endpoints; `validate(schema)` middleware pattern
+
+---
+
 ## [2026-05-14] - Phase 0 Complete
 
 ### Added

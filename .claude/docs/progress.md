@@ -2,9 +2,9 @@
 
 ## Current State
 ```yaml
-current_phase: "Phase 1"
+current_phase: "Phase 2"
 started_at: "2026-04-29"
-last_updated: "2026-05-14"
+last_updated: "2026-05-18"
 ```
 
 ---
@@ -53,25 +53,26 @@ last_updated: "2026-05-14"
 ---
 
 ## Phase 1 — Core Backend API
-**Status**: Not Started
+**Status**: Complete ✅
+**Completed**: 2026-05-18
 **Goal**: Build all CRUD endpoints for portfolio content
 
 ### Tasks
-- [ ] User model + Clerk integration
-- [ ] Projects CRUD (POST, GET, PUT, DELETE)
-- [ ] Experience CRUD
-- [ ] Skills CRUD
-- [ ] Contact CRUD (single record per user)
-- [ ] Resume upload endpoint (Cloudinary integration)
-- [ ] Public API endpoints (`GET /api/v1/{username}/...`)
-- [ ] Input validation with Zod on all endpoints
+- [x] User model + Clerk integration (sync-on-request via `middlewares/require-auth.js`)
+- [x] Projects CRUD (POST, GET, PUT, DELETE) — inline tags + skillIds linking
+- [x] Experience CRUD — optional skillIds, endDate validation
+- [x] Skills CRUD
+- [x] Contact CRUD (single record per user — upsert) + Social Accounts CRUD
+- [x] Resume upload endpoint (Cloudinary integration) + generic `/upload`
+- [x] Public API endpoints (`GET /api/v1/:username/{projects,experience,skills,contact,resume}`)
+- [x] Input validation with Zod on all mutating endpoints
 - [x] Standardized API response format (`{ success, data, error }`)
 - [x] Error handling middleware
 
 ---
 
 ## Phase 2 — Dashboard Frontend
-**Status**: Not Started
+**Status**: In Progress
 **Goal**: Build the admin dashboard for content management
 
 ### Tasks
