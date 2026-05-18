@@ -16,8 +16,10 @@
 function errorHandler(err, req, res, _next) {
   console.error(`[ERROR] ${req.method} ${req.path}:`, err);
 
-  const statusCode = err.statusCode || 500;
-  const code = err.code || 'INTERNAL_ERROR';
+  // @clerk/clerk-sdk-node throws plain Error("Unauthenticated") with no status code
+  const isClerkUnauth = err.message === 'Unauthenticated';
+  const statusCode = err.statusCode || err.status || (isClerkUnauth ? 401 : 500);
+  const code = err.code || (isClerkUnauth ? 'UNAUTHORIZED' : 'INTERNAL_ERROR');
   const message =
     statusCode === 500
       ? 'An unexpected error occurred'
