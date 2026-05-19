@@ -17,6 +17,11 @@ app.use(express.json());
 // Routes
 app.use('/api/v1', apiRouter);
 
+// Dev-only: serve token helper page from HTTP origin (Clerk blocks file://)
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/test-token', (_req, res) => res.sendFile(__dirname + '/test-phase1.html'));
+}
+
 // Error handling (must be after all routes)
 app.use(errorHandler);
 
