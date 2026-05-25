@@ -117,6 +117,7 @@ For MVP, list endpoints can ignore pagination params and return all items. The e
 | `SYSTEM_TAG_PROTECTED` | 409 | Cannot delete a system tag (e.g., featured) |
 | `EMAIL_NOT_VERIFIED` | 403 | (Phase 7) Email verification required |
 | `INTERNAL_ERROR` | 500 | Unexpected server error |
+| `NOT_IMPLEMENTED` | 501 | Phase 1 stub — endpoint not yet built (replaced when the domain is implemented) |
 
 ---
 

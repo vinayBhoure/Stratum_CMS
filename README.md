@@ -410,8 +410,8 @@ Stratum CMS follows a 12-phase sequential roadmap. Each phase is independently s
 | Phase | Name | Status | Scope |
 |-------|------|--------|-------|
 | **0** | Project Setup | ✅ | Monorepo scaffold, CORS, health check, FE↔BE verified |
-| **1** | Core Backend | 🔜 Next | Body parser, error handler, asyncHandler, routes scaffolded |
-| **2** | Authentication | ⬚ | Signup, login, logout, JWT cookies, blacklist, cascade delete |
+| **1** | Core Backend | ✅ | Body parser, error handler, asyncHandler, routes scaffolded |
+| **2** | Authentication | 🔜 Next | Signup, login, logout, JWT cookies, blacklist, cascade delete |
 | **3** | CRUD + Media | ⬚ | All content modules + Multer → Cloudinary pipeline |
 | **4** | Public API | ⬚ | Read-only endpoints at `api.domain.com/v1/:userId/:section` |
 | **5** | Master Admin | ⬚ | Role-gated user management (view + delete only) |
