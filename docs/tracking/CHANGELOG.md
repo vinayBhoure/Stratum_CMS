@@ -23,7 +23,15 @@
 
 ## Phase 1 — Foundation
 
-<!-- Format: `[Phase 1] type: description` -->
+- `[Phase 1] feat: add ApiError class with statusCode, code, message, details`
+- `[Phase 1] feat: add asyncHandler utility to wrap async controllers`
+- `[Phase 1] feat: enrich global error handler — ApiError, ZodError (VALIDATION_FAILED), malformed JSON, fallback INTERNAL_ERROR`
+- `[Phase 1] chore: install zod as server dependency`
+- `[Phase 1] feat: harden body parser with 1mb size limit`
+- `[Phase 1] feat: add 404 notFound handler returning NOT_FOUND envelope`
+- `[Phase 1] feat: add validate, auth, role middleware placeholders`
+- `[Phase 1] feat: scaffold dummy controllers for auth, me, skills, tags, projects, experience, resume, media, admin (501 NOT_IMPLEMENTED)`
+- `[Phase 1] feat: scaffold domain routes for all 9 modules and wire into /api/v1 aggregator`
 
 ---
 
