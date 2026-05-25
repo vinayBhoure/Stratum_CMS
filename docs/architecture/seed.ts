@@ -1,4 +1,8 @@
 // ============================================================================
+// ⚠️ REFERENCE COPY ONLY — NOT the live seed.
+// The authoritative seed is /server/prisma/seed.ts (run via `npx prisma db seed`
+// from /server). This file is the frozen LLD reference and may drift.
+// ============================================================================
 // Stratum CMS — Prisma seed
 // ----------------------------------------------------------------------------
 // Seeds the single system tag "featured". Idempotent — safe to re-run.

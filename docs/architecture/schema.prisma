@@ -1,4 +1,9 @@
 // ============================================================================
+// ⚠️ REFERENCE COPY ONLY — NOT the live schema.
+// The authoritative schema is /server/prisma/schema.prisma (see CLAUDE.md §6:
+// "the only schema definition"). This file is the frozen LLD reference; it does
+// NOT drive migrations and may drift. Edit /server/prisma/schema.prisma instead.
+// ============================================================================
 // Stratum CMS — Prisma Schema
 // ----------------------------------------------------------------------------
 // Generated as part of LLD. Reflects all locked decisions from project memory.

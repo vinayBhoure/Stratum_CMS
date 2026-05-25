@@ -409,8 +409,8 @@ Stratum CMS follows a 12-phase sequential roadmap. Each phase is independently s
 
 | Phase | Name | Status | Scope |
 |-------|------|--------|-------|
-| **0** | Project Setup | 🔜 Next | Monorepo scaffold, CORS, health check, FE↔BE verified |
-| **1** | Core Backend | ⬚ | Body parser, error handler, asyncHandler, routes scaffolded |
+| **0** | Project Setup | ✅ | Monorepo scaffold, CORS, health check, FE↔BE verified |
+| **1** | Core Backend | 🔜 Next | Body parser, error handler, asyncHandler, routes scaffolded |
 | **2** | Authentication | ⬚ | Signup, login, logout, JWT cookies, blacklist, cascade delete |
 | **3** | CRUD + Media | ⬚ | All content modules + Multer → Cloudinary pipeline |
 | **4** | Public API | ⬚ | Read-only endpoints at `api.domain.com/v1/:userId/:section` |
@@ -419,7 +419,7 @@ Stratum CMS follows a 12-phase sequential roadmap. Each phase is independently s
 | **-** | Deployment | ⬚ | GitHub Actions, Docker, Vercel + Railway |
 | **7** | Polishing | ⬚ | Email (Resend), Markdown rich text, media preview |
 | **8** | Testing | ⬚ | Unit + integration tests, CI pipeline |
-| **0** | Security Audit | ⬚ | Full vulnerability scan, auth review |
+| **9** | Security Audit | ⬚ | Full vulnerability scan, auth review |
 | **10** | Pricing | ⬚ | Stripe + RevenueCat, subscription tiers |
 | **11** | SaaS Features | ⬚ | Custom domains, themes, premium tiers (Path A) |
 | **12** | Premium | ⬚ | TBD |
