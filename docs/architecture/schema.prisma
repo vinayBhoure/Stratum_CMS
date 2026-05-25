@@ -1,0 +1,291 @@
+// ============================================================================
+// Stratum CMS — Prisma Schema
+// ----------------------------------------------------------------------------
+// Generated as part of LLD. Reflects all locked decisions from project memory.
+// All userIds are nanoid(12) — opaque, non-enumerable. Generated in application
+// layer (not by Prisma) to keep length consistent.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum Role {
+  user
+  masterAdmin
+}
+
+// ============================================================================
+// AUTH — login credentials, role, verification status
+// ----------------------------------------------------------------------------
+// userId is the canonical user identifier across the entire system.
+// Generated in app code via nanoid(12), not by Prisma.
+// `email` here is the LOGIN credential. Public contact email lives in
+// UserInformation.email — they may differ.
+// ============================================================================
+
+model Auth {
+  userId        String   @id @db.VarChar(12)
+  email         String   @unique
+  password      String   // bcrypt hash
+  name          String   // internal display ("Welcome back, X")
+  role          Role     @default(user)
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations (all cascade on delete — hard delete user wipes everything)
+  userInformation UserInformation?
+  resume          Resume?
+  skills          Skill[]
+  tags            Tag[]
+  projects        Project[]
+  experiences     Experience[]
+
+  @@index([email])
+  @@map("auth")
+}
+
+// ============================================================================
+// TOKEN BLACKLIST — invalidated JWTs (post-logout)
+// ----------------------------------------------------------------------------
+// Every protected route checks here. Entries older than 7 days are cleaned up
+// by a scheduled job (see /jobs/blacklistCleanup.ts). 7 days matches JWT TTL.
+// ============================================================================
+
+model TokenBlacklist {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("token_blacklist")
+}
+
+// ============================================================================
+// USER INFORMATION — public profile (1-to-1 with Auth)
+// ----------------------------------------------------------------------------
+// This is the PUBLIC face. The email here is the contact email shown on the
+// portfolio. Distinct from Auth.email (login).
+// JSON fields chosen for contactNumber and socialMediaLinks because they are
+// schemaless / open-ended (linkedin, github, twitter, "many more" per KB).
+// ============================================================================
+
+model UserInformation {
+  userId             String   @id @db.VarChar(12)
+  name               String
+  email              String?
+  contactNumber      Json?    // { countryCode: string, number: string }
+  address            String?
+  googleLocationLink String?
+  socialMediaLinks   Json?    // { linkedin?, github?, twitter?, instagram?, ... }
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  auth Auth @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("user_information")
+}
+
+// ============================================================================
+// SKILLS — canonical per-user registry
+// ----------------------------------------------------------------------------
+// Referenced by Projects and Experience via separate junction tables.
+// Block-delete enforced in application layer (SkillsService.delete) by
+// checking junction tables before allowing deletion.
+// Unique (userId, skill) prevents duplicate skill names per user.
+// ============================================================================
+
+model Skill {
+  id        String   @id @db.VarChar(12)
+  userId    String   @db.VarChar(12)
+  skill     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auth              Auth               @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  projectSkills     ProjectSkill[]
+  experienceSkills  ExperienceSkill[]
+
+  @@unique([userId, skill])
+  @@index([userId])
+  @@map("skills")
+}
+
+// ============================================================================
+// TAGS — system + user tags
+// ----------------------------------------------------------------------------
+// userId IS NULL means system tag (e.g., "featured", seeded once).
+// isSystem flag is the explicit marker; userId nullability is the data shape.
+// Users can apply system tags to their projects but cannot delete them.
+// ============================================================================
+
+model Tag {
+  id        String   @id @db.VarChar(12)
+  userId    String?  @db.VarChar(12) // null = system tag
+  name      String
+  isSystem  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auth        Auth?         @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  projectTags ProjectTag[]
+
+  @@unique([userId, name]) // no duplicate tag names per user; system tags share null bucket
+  @@index([userId])
+  @@map("tags")
+}
+
+// ============================================================================
+// PROJECTS
+// ----------------------------------------------------------------------------
+// `description` is plain text in Phase 3, Markdown from Phase 7.
+// `mediaUrl` is a single Cloudinary URL (image or video).
+// Skills and tags linked via junction tables.
+// NO `redirectLink` field (removed per Decision D5).
+// ============================================================================
+
+model Project {
+  id          String   @id @db.VarChar(12)
+  userId      String   @db.VarChar(12)
+  title       String
+  description String?  @db.Text
+  mediaUrl    String?
+  githubLink  String?
+  liveLink    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  auth          Auth           @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  projectSkills ProjectSkill[]
+  projectTags   ProjectTag[]
+
+  @@index([userId])
+  @@map("projects")
+}
+
+// ============================================================================
+// PROJECT_SKILLS — junction (Project <-> Skill)
+// ----------------------------------------------------------------------------
+// Cascade on projectId (deleting a project removes its skill links).
+// Restrict on skillId (a skill cannot be deleted while linked — enforces
+// block-delete rule in application code).
+// ============================================================================
+
+model ProjectSkill {
+  projectId String @db.VarChar(12)
+  skillId   String @db.VarChar(12)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Restrict)
+
+  @@id([projectId, skillId])
+  @@index([skillId])
+  @@map("project_skills")
+}
+
+// ============================================================================
+// PROJECT_TAGS — junction (Project <-> Tag)
+// ----------------------------------------------------------------------------
+// Same cascade pattern as ProjectSkill.
+// System tags (e.g., "featured") are protected from deletion by the
+// TagsService — Restrict here protects against accidental deletion when tags
+// are in use.
+// ============================================================================
+
+model ProjectTag {
+  projectId String @db.VarChar(12)
+  tagId     String @db.VarChar(12)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Restrict)
+
+  @@id([projectId, tagId])
+  @@index([tagId])
+  @@map("project_tags")
+}
+
+// ============================================================================
+// EXPERIENCE
+// ----------------------------------------------------------------------------
+// activeJob drives the durationTo nullability logic:
+//   - activeJob = true  → durationTo must be null  ("currently working here")
+//   - activeJob = false → durationTo must be provided
+// Prisma cannot enforce this conditional constraint at the DB level.
+// ExperienceService.create() and ExperienceService.update() enforce this rule
+// in application code and throw ApiError INVALID_DURATION if violated.
+//
+// Certificates stored as a JSON column. Each entry:
+//   { name: string, url: string, updatedAt: ISO string, isActive: boolean }
+// `updatedAt` and `isActive` defaults are enforced in ExperienceService when
+// inserting into the array (Prisma cannot default fields inside JSON).
+// Skills referenced via junction table.
+// ============================================================================
+
+model Experience {
+  id           String    @id @db.VarChar(12)
+  userId       String    @db.VarChar(12)
+  title        String
+  company      String
+  location     String?
+  durationFrom DateTime
+  durationTo   DateTime? // null only when activeJob = true
+  activeJob    Boolean   @default(false)
+  description  String?   @db.Text
+  certificates Json      @default("[]") // array of { name, url, updatedAt, isActive }
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  auth             Auth              @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  experienceSkills ExperienceSkill[]
+
+  @@index([userId])
+  @@map("experience")
+}
+
+// ============================================================================
+// EXPERIENCE_SKILLS — junction (Experience <-> Skill)
+// ----------------------------------------------------------------------------
+// Cascade on experienceId, Restrict on skillId.
+// This is the primary table the SkillsService checks for block-delete.
+// ============================================================================
+
+model ExperienceSkill {
+  experienceId String @db.VarChar(12)
+  skillId      String @db.VarChar(12)
+
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  skill      Skill      @relation(fields: [skillId], references: [id], onDelete: Restrict)
+
+  @@id([experienceId, skillId])
+  @@index([skillId])
+  @@map("experience_skills")
+}
+
+// ============================================================================
+// RESUME — 1-to-1 with Auth (optional)
+// ----------------------------------------------------------------------------
+// userId is BOTH primary key AND foreign key — guarantees exactly one resume
+// per user without needing an extra unique constraint.
+// `url` is the Cloudinary-hosted PDF.
+// ============================================================================
+
+model Resume {
+  userId    String   @id @db.VarChar(12)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auth Auth @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("resume")
+}
