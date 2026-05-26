@@ -28,7 +28,7 @@
 
 **D-API-01 — NOT_IMPLEMENTED error code added to catalogue:** Phase 1 scaffolded dummy controllers that return a real `ResponseEnvelope` with a `501` status. This required adding `NOT_IMPLEMENTED | 501` to the error code catalogue in `api_contracts.md §2`. **Rationale:** Using a real envelope (rather than an empty stub) exercises the error pipeline end-to-end and makes stub routes immediately testable. The code is temporary — each domain's stubs are replaced with real logic in Phase 2–5 and removed from the catalogue at that point. **Status:** Locked (Phase 1).
 
-**D-API-02 — Delete-account route is `DELETE /api/v1/auth/account`:** The locked contract `api_contracts.md §3.4` specifies `/auth/account`. The README API table lists `/auth/delete-account` — this is a stale doc inconsistency; the implementation and contract use `/account`. **Rationale:** `api_contracts.md` is the locked source of truth between backend and frontend. **Status:** Locked (Phase 2). **Action:** correct the README table in a future docs pass.
+**D-API-02 — Delete-account route is `DELETE /api/v1/auth/account`:** The locked contract `api_contracts.md §3.4` specifies `/auth/account`. The README API table previously listed `/auth/delete-account`; the implementation and contract use `/account`. **Rationale:** `api_contracts.md` is the locked source of truth between backend and frontend. **Status:** Locked (Phase 2). **Action:** README table corrected to `/auth/account` (2026-05-27 doc-sync pass).
 
 ---
 

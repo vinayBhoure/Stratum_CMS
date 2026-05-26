@@ -270,7 +270,7 @@ Base URL: `https://api.domain.com/api/v1`
 | `POST` | `/auth/login` | public | Login (sets httpOnly cookie) |
 | `POST` | `/auth/logout` | authenticated | Logout (blacklists token) |
 | `GET` | `/auth/session` | authenticated | Verify session + rehydrate |
-| `DELETE` | `/auth/delete-account` | authenticated | Hard delete (password re-prompt) |
+| `DELETE` | `/auth/account` | authenticated | Hard delete (password re-prompt) |
 </details>
 
 <details>
@@ -411,7 +411,7 @@ Stratum CMS follows a 12-phase sequential roadmap. Each phase is independently s
 |-------|------|--------|-------|
 | **0** | Project Setup | ✅ | Monorepo scaffold, CORS, health check, FE↔BE verified |
 | **1** | Core Backend | ✅ | Body parser, error handler, asyncHandler, routes scaffolded |
-| **2** | Authentication | 🔜 Next | Signup, login, logout, JWT cookies, blacklist, cascade delete |
+| **2** | Authentication | ✅ | Signup, login, logout, JWT cookies, blacklist, cascade delete |
 | **3** | CRUD + Media | ⬚ | All content modules + Multer → Cloudinary pipeline |
 | **4** | Public API | ⬚ | Read-only endpoints at `api.domain.com/v1/:userId/:section` |
 | **5** | Master Admin | ⬚ | Role-gated user management (view + delete only) |
