@@ -4,7 +4,7 @@
 
 - [Phase 0 — Project Setup](#phase-0--project-setup)
 - [Phase 1 — Foundation](#phase-1--foundation)
-- [Phase 2 — Dashboard Frontend](#phase-2--dashboard-frontend)
+- [Phase 2 — Authentication](#phase-2--authentication)
 - [Phase 3 — CRUD Modules](#phase-3--crud-modules)
 - [Phase 4 — Public API](#phase-4--public-api)
 - [Phase 5 — Admin Panel](#phase-5--admin-panel)
@@ -35,7 +35,15 @@
 
 ---
 
-## Phase 2 — Dashboard Frontend
+## Phase 2 — Authentication
+
+- `[Phase 2] chore: add auth deps (bcryptjs, jsonwebtoken, cookie-parser), require JWT_SECRET, wire cookie-parser`
+- `[Phase 2] feat: add nanoid, jwt (minimal {userId, role} payload, 7d), bcryptjs password, and per-env cookie utilities`
+- `[Phase 2] feat: add auth Zod schemas (signup/login/deleteAccount, strict) and implement validate middleware`
+- `[Phase 2] feat: add auth service layer (signup transaction, login no-enumeration, logout/delete blacklist, getSession)`
+- `[Phase 2] feat: implement AuthMiddleware (UNAUTHENTICATED/INVALID_TOKEN/TOKEN_REVOKED), RoleMiddleware, req.user types`
+- `[Phase 2] feat: wire auth controllers and routes (signup 201, login/logout/session/delete 200; validate → auth chain)`
+- `[Phase 2] feat: add blacklist cleanup job (7-day TTL purge; scheduling deferred to Phase 6)`
 
 ---
 

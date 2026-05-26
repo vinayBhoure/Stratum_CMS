@@ -6,6 +6,7 @@ interface Env {
   databaseUrl: string;
   serverPort: number;
   clientUrl: string;
+  jwtSecret: string;
   nodeEnv: "development" | "production" | "test";
 }
 
@@ -28,5 +29,6 @@ export const env: Env = {
   databaseUrl: required("DATABASE_URL"),
   serverPort: parsedPort,
   clientUrl: required("CLIENT_URL"),
+  jwtSecret: required("JWT_SECRET"),
   nodeEnv,
 };

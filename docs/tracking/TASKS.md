@@ -18,6 +18,17 @@
 
 ## Completed
 
+### Phase 2 — Authentication (2026-05-26)
+
+- [x] Auth deps installed: `bcryptjs`, `jsonwebtoken`, `cookie-parser`; `JWT_SECRET` required in `env.ts`; `cookie-parser` wired into app
+- [x] Utilities: `nanoId.ts` (id 12), `jwt.ts` (sign/verify minimal `{userId, role}`, 7d), `password.ts` (bcryptjs, 12 rounds), `cookie.ts` (per-env `stratum_token` options)
+- [x] Validators: `auth.schema.ts` (signup/login/deleteAccount, `.strict()`); `validate.middleware.ts` parses `req.body` → `VALIDATION_FAILED`
+- [x] Service: `auth.service.ts` — signup (EMAIL_EXISTS guard + transactional Auth/UserInformation), login (no email enumeration), logout/deleteAccount (blacklist), getSession
+- [x] Middleware: `authMiddleware` (UNAUTHENTICATED / INVALID_TOKEN / TOKEN_REVOKED, attaches `req.user`), `roleMiddleware` (FORBIDDEN), `types/express.d.ts` Request augmentation
+- [x] Controllers + routes wired: signup 201, login/logout/session/delete 200; validate → auth chain; signup/login public
+- [x] `jobs/blacklistCleanup.ts` — 7-day purge (scheduling deferred to Phase 6)
+- [x] Verified end-to-end (manual HTTP): signup 201 + cookie, duplicate 409, weak-pw 400, session 200/401, logout 200 + TOKEN_REVOKED on reuse, login wrong/nonexistent 401, delete wrong-pw 401, delete 200 + cascade confirmed (re-signup 201)
+
 ### Phase 1 — Core Backend Structure (2026-05-26)
 
 - [x] `ApiError` class (`utils/apiError.ts`) — typed error with `statusCode`, `code`, `message`, `details?`

@@ -1,10 +1,17 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { ZodSchema } from "zod";
+import { ZodType } from "zod";
 
-// TODO Phase 2/3: replace with real Zod validation against the provided schema.
 // Middleware order (fixed): Body parser → ValidateMiddleware → AuthMiddleware → RoleMiddleware → Controller.
-export function validateMiddleware(_schema: ZodSchema): RequestHandler {
-  return (_req: Request, _res: Response, next: NextFunction): void => {
+// Runs before auth so malformed requests are rejected cheaply. A failed parse
+// forwards the ZodError to the error handler, which returns VALIDATION_FAILED (400).
+export function validateMiddleware(schema: ZodType): RequestHandler {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      next(result.error);
+      return;
+    }
+    req.body = result.data;
     next();
   };
 }

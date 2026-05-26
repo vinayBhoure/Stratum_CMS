@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 import { healthRouter } from "./routes/health.routes";
 import { apiRouter } from "./routes";
@@ -11,6 +12,9 @@ export const app = express();
 // Body parsing — 1mb cap prevents trivially large payloads.
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+
+// Cookie parsing — AuthMiddleware reads the stratum_token httpOnly cookie.
+app.use(cookieParser());
 
 // CORS — credentials enabled for the httpOnly cookie auth used from Phase 2.
 app.use(
