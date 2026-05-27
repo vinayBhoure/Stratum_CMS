@@ -49,6 +49,15 @@
 
 ## Phase 3 — CRUD Modules
 
+- `[Phase 3] chore: add pagination util and branch scaffold`
+- `[Phase 3] feat: add me profile get/update endpoints`
+- `[Phase 3] feat: add skills CRUD with block-delete`
+- `[Phase 3] feat: add tags CRUD with system protection and block-delete`
+- `[Phase 3] feat: add projects CRUD with junction diffing and reference validation`
+- `[Phase 3] feat: add experience CRUD with duration validation and cert merging`
+- `[Phase 3] feat: add media upload endpoint with Cloudinary integration`
+- `[Phase 3] feat: add resume upload/delete with Cloudinary asset cleanup`
+
 ---
 
 ## Phase 4 — Public API

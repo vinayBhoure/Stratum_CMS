@@ -32,6 +32,18 @@
 
 ---
 
+## Phase 3 Decisions
+
+**D-P3-01 — Duration rule enforced in service layer, throws `INVALID_DURATION`:** The `activeJob`/`durationTo` conditional (`activeJob=true → durationTo must be null`; `activeJob=false → durationTo required and after durationFrom`) is enforced in `ExperienceService.assertDuration()` which throws `ApiError(400, "INVALID_DURATION", ...)`. **Rationale:** the dedicated `INVALID_DURATION` code exists in the locked error catalogue (§2) precisely for this case; service-level enforcement keeps the validator schema simple and matches the `schema.prisma` comment. **Status:** Locked (Phase 3).
+
+**D-P3-02 — Certificate change detection by `url` field:** On `PUT /experience/:id`, existing certificates are matched to incoming entries by `url`. If the `url` is found, `updatedAt` is preserved unless `name` or `isActive` changed; new `url` entries get `updatedAt: now()`. **Rationale:** `url` is the stable identity for a certificate (Cloudinary asset URL); `name` can be edited without creating a new asset. **Status:** Locked (Phase 3).
+
+**D-P3-03 — Old Cloudinary assets deleted on resume replace/delete; project `mediaUrl` orphans deferred:** `ResumeService` parses `public_id` from the stored Cloudinary URL and calls `cloudinary.uploader.destroy` before replacing or deleting. Project `mediaUrl` and experience certificate assets are NOT cleaned up on update/delete — orphaned assets are a Phase 6 cleanup job concern. **Rationale:** resume is a single-asset replace; project/experience URLs can be shared or referenced externally, making eager deletion risky without a dedicated orphan tracking column. **Status:** Locked (Phase 3).
+
+**D-P3-04 — Prisma `$transaction` write-only; reads moved outside transaction:** Junction create/update sequences use `prisma.$transaction()` for write atomicity but the final `findUniqueOrThrow` (with `include`) runs outside the transaction block. **Rationale:** interactive transaction default timeout is 5 s; an additional read inside a multi-step write transaction consistently triggered `Transaction already closed` on Neon Postgres. Write atomicity is preserved; the post-transaction read is safe because the writes committed. **Status:** Locked (Phase 3).
+
+---
+
 ## Security Decisions
 
 **D-SEC-01 — Password hashing uses `bcryptjs` (pure JS), 12 rounds:** Chose `bcryptjs` over the native `bcrypt` addon. **Rationale:** avoids the node-gyp / native build toolchain on Windows; same API; performance is adequate for this scale. 12 rounds exceeds the auth-flow skill's 10+ floor. **Status:** Locked (Phase 2).

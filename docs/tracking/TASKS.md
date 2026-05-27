@@ -18,6 +18,19 @@
 
 ## Completed
 
+### Phase 3 — CRUD + Media (2026-05-27)
+
+- [x] `utils/pagination.ts` — `parsePagination`, `buildPagination`, `paginatedData` helpers; used by all list endpoints
+- [x] **me** (`§4`): `validators/me.schema.ts`, `services/me.service.ts`, controller + routes; GET + PUT; `Prisma.DbNull` for nullable JSON fields; verified end-to-end
+- [x] **skills** (`§5`): `validators/skills.schema.ts`, `services/skills.service.ts`, controller + routes; list/create/update/delete; block-delete returns `SKILL_IN_USE` with `referencedBy.{experiences,projects}`; P2002 unique → `VALIDATION_FAILED`
+- [x] **tags** (`§6`): `validators/tags.schema.ts`, `services/tags.service.ts`, controller + routes; list returns user + system tags; system tag rename/delete → `SYSTEM_TAG_PROTECTED`; block-delete → `TAG_IN_USE`
+- [x] **projects** (`§7`): `validators/projects.schema.ts`, `services/projects.service.ts`, controller + routes; junction diffing atomic via `$transaction`; `assertReferences` validates skillIds (owner) + tagIds (owner or system); reads moved outside transaction (D-P3-04)
+- [x] **experience** (`§8`): `validators/experience.schema.ts`, `services/experience.service.ts`, controller + routes; `assertDuration` (D-P3-01); cert merge by url (D-P3-02) preserving `updatedAt`; skill junction diffing
+- [x] **media** (`§11`): `config/cloudinary.ts`, `middleware/upload.middleware.ts`, `services/media.service.ts`, controller + routes; multer memory storage; MIME+size guards per type; `Cloudinary.upload_stream`; `UploadApiErrorResponse` mapped to `ApiError`
+- [x] **resume** (`§9`): `services/resume.service.ts`, controller + routes; PDF-only multer; `upsert` pattern; old asset deletion via parsed `public_id` (D-P3-03); `data: null` when none exists
+- [x] Cloudinary creds wired into `env.ts` + `.env.example`; lodash corrupt install fixed
+- [x] Full typecheck (server + client) clean; CHANGELOG + DECISIONS + TASKS updated; merged to `development`
+
 ### Phase 2 — Authentication (2026-05-26)
 
 - [x] Auth deps installed: `bcryptjs`, `jsonwebtoken`, `cookie-parser`; `JWT_SECRET` required in `env.ts`; `cookie-parser` wired into app
