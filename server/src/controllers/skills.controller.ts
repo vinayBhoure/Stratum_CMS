@@ -1,13 +1,28 @@
-import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { errorEnvelope } from "../utils/responseEnvelope";
+import { successEnvelope } from "../utils/responseEnvelope";
+import { requireUser } from "../middleware/auth.middleware";
+import * as skillsService from "../services/skills.service";
 
-const stub = (name: string) =>
-  asyncHandler(async (_req: Request, res: Response): Promise<void> => {
-    res.status(501).json(errorEnvelope("NOT_IMPLEMENTED", `skills.${name} not implemented`, 501));
-  });
+export const listSkills = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const result = await skillsService.listSkills(userId, req.query as Record<string, unknown>);
+  res.status(200).json(successEnvelope(result, 200));
+});
 
-export const listSkills = stub("listSkills");
-export const createSkill = stub("createSkill");
-export const updateSkill = stub("updateSkill");
-export const deleteSkill = stub("deleteSkill");
+export const createSkill = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const skill = await skillsService.createSkill(userId, req.body);
+  res.status(201).json(successEnvelope(skill, 201));
+});
+
+export const updateSkill = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const skill = await skillsService.updateSkill(userId, req.params.skillId, req.body);
+  res.status(200).json(successEnvelope(skill, 200));
+});
+
+export const deleteSkill = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  await skillsService.deleteSkill(userId, req.params.skillId);
+  res.status(204).send();
+});
