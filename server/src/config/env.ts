@@ -8,6 +8,9 @@ interface Env {
   clientUrl: string;
   jwtSecret: string;
   nodeEnv: "development" | "production" | "test";
+  cloudinaryCloudName: string;
+  cloudinaryApiKey: string;
+  cloudinaryApiSecret: string;
 }
 
 function required(key: string): string {
@@ -31,4 +34,7 @@ export const env: Env = {
   clientUrl: required("CLIENT_URL"),
   jwtSecret: required("JWT_SECRET"),
   nodeEnv,
+  cloudinaryCloudName: required("CLOUDINARY_CLOUD_NAME"),
+  cloudinaryApiKey: required("CLOUDINARY_API_KEY"),
+  cloudinaryApiSecret: required("CLOUDINARY_API_SECRET"),
 };
