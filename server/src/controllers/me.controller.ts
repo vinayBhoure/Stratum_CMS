@@ -1,11 +1,16 @@
-import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { errorEnvelope } from "../utils/responseEnvelope";
+import { successEnvelope } from "../utils/responseEnvelope";
+import { requireUser } from "../middleware/auth.middleware";
+import * as meService from "../services/me.service";
 
-const stub = (name: string) =>
-  asyncHandler(async (_req: Request, res: Response): Promise<void> => {
-    res.status(501).json(errorEnvelope("NOT_IMPLEMENTED", `me.${name} not implemented`, 501));
-  });
+export const getMe = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const profile = await meService.getProfile(userId);
+  res.status(200).json(successEnvelope(profile, 200));
+});
 
-export const getMe = stub("getMe");
-export const updateMe = stub("updateMe");
+export const updateMe = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const profile = await meService.updateProfile(userId, req.body);
+  res.status(200).json(successEnvelope(profile, 200));
+});
