@@ -1,13 +1,28 @@
-import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { errorEnvelope } from "../utils/responseEnvelope";
+import { successEnvelope } from "../utils/responseEnvelope";
+import { requireUser } from "../middleware/auth.middleware";
+import * as tagsService from "../services/tags.service";
 
-const stub = (name: string) =>
-  asyncHandler(async (_req: Request, res: Response): Promise<void> => {
-    res.status(501).json(errorEnvelope("NOT_IMPLEMENTED", `tags.${name} not implemented`, 501));
-  });
+export const listTags = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const result = await tagsService.listTags(userId, req.query as Record<string, unknown>);
+  res.status(200).json(successEnvelope(result, 200));
+});
 
-export const listTags = stub("listTags");
-export const createTag = stub("createTag");
-export const updateTag = stub("updateTag");
-export const deleteTag = stub("deleteTag");
+export const createTag = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const tag = await tagsService.createTag(userId, req.body);
+  res.status(201).json(successEnvelope(tag, 201));
+});
+
+export const updateTag = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  const tag = await tagsService.updateTag(userId, req.params.tagId, req.body);
+  res.status(200).json(successEnvelope(tag, 200));
+});
+
+export const deleteTag = asyncHandler(async (req, res): Promise<void> => {
+  const { userId } = requireUser(req);
+  await tagsService.deleteTag(userId, req.params.tagId);
+  res.status(204).send();
+});
