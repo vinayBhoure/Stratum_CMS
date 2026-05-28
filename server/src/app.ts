@@ -17,17 +17,19 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 // Cookie parsing — AuthMiddleware reads the stratum_token httpOnly cookie.
 app.use(cookieParser());
 
-// CORS — credentials enabled for the httpOnly cookie auth used from Phase 2.
+// Public API CORS — open to all origins, no credentials. Scoped to /v1 only
+// so the cookie surface on /api/v1 keeps its origin lock (D-P4-04).
+app.use("/v1", cors({ origin: "*", credentials: false }));
+
+// Private API CORS — credentials enabled for the httpOnly cookie (Phase 2+).
+// Scoped to /api/v1 so the wildcard above does not pollute this surface.
 app.use(
+  "/api/v1",
   cors({
     origin: env.clientUrl,
     credentials: true,
   })
 );
-
-// Public API CORS — open to all origins; scoped to /v1 only so the cookie
-// surface on /api/v1 keeps its origin lock (D-P4-04).
-app.use("/v1", cors({ origin: "*" }));
 
 // Health check (root-level, not under /api/v1).
 app.use("/health", healthRouter);
