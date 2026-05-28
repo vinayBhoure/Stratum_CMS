@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 import { healthRouter } from "./routes/health.routes";
 import { apiRouter } from "./routes";
+import { publicRouter } from "./routes/public.routes";
 import { notFoundHandler } from "./middleware/notFound.middleware";
 import { errorMiddleware } from "./middleware/error.middleware";
 
@@ -24,8 +25,15 @@ app.use(
   })
 );
 
+// Public API CORS — open to all origins; scoped to /v1 only so the cookie
+// surface on /api/v1 keeps its origin lock (D-P4-04).
+app.use("/v1", cors({ origin: "*" }));
+
 // Health check (root-level, not under /api/v1).
 app.use("/health", healthRouter);
+
+// Public read-only API — no auth, host-agnostic, cached (D-P4-04).
+app.use("/v1", publicRouter);
 
 // Versioned API surface. Domain routers attach in Phase 1+.
 app.use("/api/v1", apiRouter);
