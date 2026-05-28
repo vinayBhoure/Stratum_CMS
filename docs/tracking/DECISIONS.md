@@ -44,6 +44,20 @@
 
 ---
 
+## Phase 4 Decisions
+
+**D-P4-01 — Drop `NO_DATA`; lists return `[]`, singulars return `null`:** Empty list sections (`projects`, `experience`, `skills`, `tags`) return `success:true, data:[], error:null, 200`. Absent singular sections (`user-info`, `resume`) return `success:true, data:null, error:null, 200`. The `NO_DATA` error code from `api_contracts §9.3` is **not implemented**. **Rationale:** consistent with existing Phase 3 patterns (e.g. `resume.service.ts` returns `null`); avoids a `success:true` + populated `error` envelope, which contradicts the envelope contract. **Status:** Locked (Phase 4). **Supersedes:** `api_contracts.md §12` `NO_DATA` references.
+
+**D-P4-02 — Phase 4 is backend-only; `publicApi` RTK slice drafted as FE handoff:** No frontend UI is built in Phase 4. The RTK Query slice file `client/src/redux/api/publicApi.ts` is committed as a draft for the FE team — not wired into the store. **Rationale:** mirror the backend-first workflow of Phases 1–3. **Status:** Locked (Phase 4).
+
+**D-P4-03 — Node Cache with 600s TTL + `Cache-Control: public, max-age=600`:** Public API responses cached in-process via `node-cache` (600s TTL, keyed `userId:section:queryHash`). `Cache-Control: public, max-age=600` set on all `/v1` responses. TTL-only — no explicit bust on private-API mutations (≤600s staleness acceptable for MVP portfolio data). **Rationale:** zero extra infrastructure; clean migration path to Redis on scale-out. **Status:** Locked (Phase 4). **Supersedes:** `KB v2 §9.4` (TTL was TBD).
+
+**D-P4-04 — Public router mounted at root `/v1`, host-agnostic; open CORS scoped to `/v1`:** `publicRouter` mounted at `app.use("/v1", ...)` with `cors({ origin: "*" })` applied only to that path prefix. The `/api/v1` authenticated surface retains its `origin: env.clientUrl` lock. Subdomain (`api.domain.com`) handled at deploy/proxy layer. **Rationale:** simplest local dev, no host-config in app code, trivially testable. **Status:** Locked (Phase 4). **Supersedes:** `KB v2 §9.1` subdomain assumption.
+
+**D-P4-05 — Public tags endpoint returns tags in use on user's projects:** `GET /v1/:userId/tags` returns distinct tags applied to at least one of the user's projects (not all tags in the user's registry). **Rationale:** portfolio site filter buttons should reflect content that actually exists; showing tags with no associated projects would create empty filter states. **Status:** Locked (Phase 4).
+
+---
+
 ## Security Decisions
 
 **D-SEC-01 — Password hashing uses `bcryptjs` (pure JS), 12 rounds:** Chose `bcryptjs` over the native `bcrypt` addon. **Rationale:** avoids the node-gyp / native build toolchain on Windows; same API; performance is adequate for this scale. 12 rounds exceeds the auth-flow skill's 10+ floor. **Status:** Locked (Phase 2).

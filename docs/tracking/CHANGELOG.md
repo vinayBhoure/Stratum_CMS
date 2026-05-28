@@ -62,6 +62,16 @@
 
 ## Phase 4 — Public API
 
+- `[Phase 4] feat: add public API foundation with cache, validator, service, controller, and routes`
+  - `validators/public.schema.ts`: userId (nanoid12), limit, tag query schemas
+  - `config/cache.ts`: node-cache singleton, 600s TTL, cacheKey helper (D-P4-03)
+  - `services/public.service.ts`: assertUserExists + 6 flattened read functions (D-P4-01, D-P4-05)
+  - `controllers/public.controller.ts`: withCache wrapper, Cache-Control: public headers
+  - `routes/public.routes.ts`: 6 GET routes under `/:userId/:section`
+  - `app.ts`: `/v1` mount with open CORS scoped to public router (D-P4-04)
+- `[Phase 4] feat: add publicApi RTK slice draft for FE handoff`
+  - `client/src/redux/api/publicApi.ts`: 6 typed endpoints, hooks exported, integration notes (D-P4-02)
+
 ---
 
 ## Phase 5 — Admin Panel

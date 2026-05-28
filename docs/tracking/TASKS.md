@@ -14,6 +14,12 @@
 
 ## Backlog
 
+### Phase 4 — Public API (pending manual validation)
+
+- [ ] Manual HTTP validation: all 6 endpoints × test matrix
+- [ ] Full typecheck server + client clean
+- [ ] Merge to `development`
+
 ---
 
 ## Completed
