@@ -14,15 +14,21 @@
 
 ## Backlog
 
-### Phase 4 — Public API (pending manual validation)
-
-- [ ] Manual HTTP validation: all 6 endpoints × test matrix
-- [ ] Full typecheck server + client clean
-- [ ] Merge to `development`
-
 ---
 
 ## Completed
+
+### Phase 4 — Public API (2026-05-28)
+
+- [x] `validators/public.schema.ts` — `userId` (nanoid12 exact length), `limit` (positive int), `tag` query schemas
+- [x] `config/cache.ts` — node-cache singleton, 600s TTL, `cacheKey` helper (D-P4-03)
+- [x] `services/public.service.ts` — `assertUserExists` (USER_NOT_FOUND 404) + 6 flattened read functions; inactive certs filtered; tags from projects-in-use only (D-P4-01, D-P4-05)
+- [x] `controllers/public.controller.ts` — `withCache` wrapper, `Cache-Control: public, max-age=600` on all responses
+- [x] `routes/public.routes.ts` — 6 GET routes under `/:userId/:section`
+- [x] `app.ts` — `/v1` mount; CORS refactored: open `origin:*` on `/v1`, origin-locked on `/api/v1`; `Access-Control-Allow-Credentials` correctly absent on public surface (D-P4-04)
+- [x] `client/src/redux/api/publicApi.ts` — RTK Query slice draft for FE handoff, 6 typed endpoints + hooks (not wired; excluded from tsconfig until Phase 5) (D-P4-02)
+- [x] Manual HTTP validation: USER_NOT_FOUND, user-info no timestamps, projects flat arrays, ?tag filter, ?limit cap, experience isActive cert filter, skills/tags flat strings, resume null, CORS headers correct, invalid params → VALIDATION_FAILED
+- [x] Full typecheck server + client clean; CHANGELOG + DECISIONS + TASKS updated; merged to `development`
 
 ### Phase 3 — CRUD + Media (2026-05-27)
 
