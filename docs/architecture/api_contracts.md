@@ -1036,15 +1036,11 @@ Standard envelope applies, but two specific responses are unique to the public A
 }
 ```
 
-**Empty resource for valid user:**
+**Empty resource for valid user (lists return `[]`, singulars return `null`):**
 ```json
-{
-  "success": true,
-  "data": null,
-  "error": { "code": "NO_DATA", "message": "no data present for this user" },
-  "statusCode": 200
-}
+{ "success": true, "data": null, "error": null, "statusCode": 200 }
 ```
+> **Note (D-P4-01):** `NO_DATA` error code was dropped in implementation. Lists (`projects`, `experience`, `skills`, `tags`) return `data: []`; absent singular resources (`user-info`, `resume`) return `data: null`. No `error` field is populated for empty responses.
 
 ### 12.1 Get Public User Info
 

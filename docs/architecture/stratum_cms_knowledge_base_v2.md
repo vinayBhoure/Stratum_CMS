@@ -514,14 +514,14 @@ Same envelope as private API. Two specific responses:
 { "success": false, "data": null, "error": { "code": "USER_NOT_FOUND", "message": "no user found" }, "statusCode": 404 }
 ```
 
-**Empty resource for valid user:**
+**Empty resource for valid user (D-P4-01):** Lists return `data: []`; absent singulars return `data: null`. `NO_DATA` code was dropped — `error` is always `null` on 200 responses.
 ```json
-{ "success": true, "data": null, "error": { "code": "NO_DATA", "message": "no data present for this user" }, "statusCode": 200 }
+{ "success": true, "data": null, "error": null, "statusCode": 200 }
 ```
 
 ### 9.4 Caching
 
-Public API responses cached via Node Cache (TTL value TBD in implementation — see §19).
+Public API responses cached via `node-cache` — TTL **600 seconds** (D-P4-03). Keys are `userId:section:queryHash`. `Cache-Control: public, max-age=600` set on all `/v1` responses.
 
 ---
 
